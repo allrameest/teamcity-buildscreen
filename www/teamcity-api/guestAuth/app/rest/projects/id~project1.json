@@ -1,0 +1,30 @@
+{  
+   "description":"",
+   "archived":false,
+   "webUrl":"",
+   "id":"project1",
+   "name":"Foo",
+   "href":"/guestAuth/app/rest/projects/id~project1",
+   "buildTypes":{  
+      "buildType":[  
+         {  
+            "id":"bt1",
+            "name":"Build",
+            "href":"/guestAuth/app/rest/buildTypes/id~bt1",
+            "projectName":"Foo",
+            "projectId":"project1",
+            "webUrl":""
+         },
+         {  
+            "id":"bt2",
+            "name":"Test",
+            "href":"/guestAuth/app/rest/buildTypes/id~bt2",
+            "projectName":"Foo",
+            "projectId":"project1",
+            "webUrl":""
+         }
+      ]
+   },
+   "templates":null,
+   "parameters":null
+}

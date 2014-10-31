@@ -1,0 +1,14 @@
+{  
+   "project":[  
+      {  
+         "id":"project1",
+         "name":"Foo",
+         "href":"/guestAuth/app/rest/projects/id~project1"
+      },
+      {  
+         "id":"project2",
+         "name":"Bar",
+         "href":"/guestAuth/app/rest/projects/id~project2"
+      }
+   ]
+}
