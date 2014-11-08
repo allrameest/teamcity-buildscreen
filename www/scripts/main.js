@@ -1,4 +1,4 @@
-var baseUrl = "teamcity-api";
+var baseUrl = "http://miniproxy.apphb.com/jetbrains-teamcity";
 
 function BuildProject(data) {
     var self = this;
