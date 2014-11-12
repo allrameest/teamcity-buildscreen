@@ -1,31 +1,44 @@
 define([
     "knockout",
-    "jquery"
-], function (ko, $) {
+    "jquery",
+    "lodash"
+], function (ko, $, _) {
 
     var baseUrl = "http://miniproxy.apphb.com/jetbrains-teamcity";
 
     var BuildProject = function(data) {
         var self = this;
-        console.log(data.name);
         self.name = data.name;
         self.projectName = data.projectName;
     }
 
     var buildProjects = ko.observableArray([]);
 
-    $.getJSON(baseUrl + "/guestAuth/app/rest/projects", function(allData) {
-        for (var i = 0; i < allData.project.length; i++) {
-            var group = allData.project[i];
-            $.getJSON(baseUrl + group.href, function(projectData) {
-                var buildTypes = projectData.buildTypes.buildType;
-                for (var j = 0; j < buildTypes.length; j++) {
-                    console.log(buildTypes[j]);
-                    buildProjects.push(new BuildProject(buildTypes[j]));
-                };
+    var pushBuildTypes = function(buildTypes) {
+        var sortedBuildTypes = _.sortBy(buildTypes, ["projectName", "name"]);
+
+        _(sortedBuildTypes).forEach(function(bt) {
+            buildProjects.push(new BuildProject(bt));
+        });
+    }
+
+    $.getJSON(baseUrl + "/guestAuth/app/rest/projects")
+        .done(function(allData) {
+
+            var groupPromises = _.map(allData.project, function(group) {
+                return $.getJSON(baseUrl + group.href);
             });
-        }
-    });
+
+            $.when.apply($, groupPromises).done(function() {
+                var groupBuildTypes = _.map(arguments, function (arg)
+                    {
+                        return arg[0].buildTypes.buildType;
+                    });
+                
+                var allBuildTypes = _.flatten(groupBuildTypes);
+                pushBuildTypes(allBuildTypes);
+            });
+        });
 
     return {
         buildProjects: buildProjects

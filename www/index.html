@@ -1,14 +1,15 @@
 <!doctype html>
 <html>
-  <head>
-    <link rel="stylesheet" href="css/main.css" />
-  </head>
-  <body>
+<head>
+<link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
 
-    <div data-bind="foreach: buildProjects">
-      <div data-bind="css: name"><span data-bind="text: projectName"></span> <span data-bind="text: name"/></span></div>
-    </div>
+<div data-bind="foreach: buildProjects">
+  <div data-bind="css: name"><span data-bind="text: projectName"></span> ||| <span data-bind="text: name"></span></div>
+</div>
 
-    <script data-main="app" src="lib/require.js"></script>
-  </body>
+<script data-main="app" src="lib/require.js"></script>
+
+</body>
 </html>

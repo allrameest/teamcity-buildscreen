@@ -3,7 +3,8 @@ define([], function () {
         baseUrl: "./",
         paths: {
             knockout: "lib/knockout",
-            jquery: "lib/jquery.min"
+            jquery: "lib/jquery.min",
+            lodash: "lib/lodash.min"
         },
         map: {
           '*': { 'jquery': 'jquery-private' },
