@@ -1,0 +1,21 @@
+* {
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+
+.build {
+	background-color: #cccccc;
+	margin: 10px;
+	padding: 10px;
+	float: left;
+	width: 30%;
+}
+
+.failed {
+	background-color: #ff0000;
+}
+
+.successful {
+	background-color: #00ff00;
+}

@@ -6,7 +6,10 @@
 <body>
 
 <div data-bind="foreach: buildProjects">
-  <div data-bind="css: name"><span data-bind="text: projectName"></span> ||| <span data-bind="text: name"></span></div>
+  <div data-bind="css: buildStatus" class="build">
+  	<p data-bind="text: projectName"></p>
+  	<p data-bind="text: name"></p>
+  </div>
 </div>
 
 <script data-main="app" src="lib/require.js"></script>

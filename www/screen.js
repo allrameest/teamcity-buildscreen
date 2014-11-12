@@ -1,44 +1,42 @@
 define([
     "knockout",
     "jquery",
-    "lodash"
-], function (ko, $, _) {
+    "lodash",
+    "project-loader",
+    "build-updater"
+], function (ko, $, _, projectLoader, buildUpdater) {
 
     var baseUrl = "http://miniproxy.apphb.com/jetbrains-teamcity";
 
-    var BuildProject = function(data) {
-        var self = this;
-        self.name = data.name;
-        self.projectName = data.projectName;
-    }
-
     var buildProjects = ko.observableArray([]);
 
-    var pushBuildTypes = function(buildTypes) {
-        var sortedBuildTypes = _.sortBy(buildTypes, ["projectName", "name"]);
+    var createProject = function(buildType) {
+        var model = {
+            name: ko.observable(buildType.name),
+            projectName: ko.observable(buildType.projectName),
+            failed: ko.observable(null)
+        }
+        model.buildStatus = ko.pureComputed(function() {
+            if (this.failed() === true) return "failed";
+            if (this.failed() === false) return "successful";
+            return null;
+        }, model);
 
-        _(sortedBuildTypes).forEach(function(bt) {
-            buildProjects.push(new BuildProject(bt));
+        $.getJSON(baseUrl + buildType.href)
+            .done(function(x) {
+                buildUpdater(baseUrl + x.builds.href, model);
+            });
+
+        return model;
+    }
+
+    var pushBuildTypes = function(buildTypes) {
+        _(buildTypes).forEach(function(bt) {
+            buildProjects.push(createProject(bt));
         });
     }
 
-    $.getJSON(baseUrl + "/guestAuth/app/rest/projects")
-        .done(function(allData) {
-
-            var groupPromises = _.map(allData.project, function(group) {
-                return $.getJSON(baseUrl + group.href);
-            });
-
-            $.when.apply($, groupPromises).done(function() {
-                var groupBuildTypes = _.map(arguments, function (arg)
-                    {
-                        return arg[0].buildTypes.buildType;
-                    });
-                
-                var allBuildTypes = _.flatten(groupBuildTypes);
-                pushBuildTypes(allBuildTypes);
-            });
-        });
+    projectLoader.load(baseUrl, pushBuildTypes);
 
     return {
         buildProjects: buildProjects
