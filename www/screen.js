@@ -30,10 +30,25 @@ define([
             return model;
         }
 
+        var compareProjects = function(left, right) {
+            if (left.projectName() !== right.projectName()) {
+                return left.projectName() < right.projectName() ? -1 : 1;
+            }
+
+            if (left.name() === right.name()) {
+                return 0;
+            }
+
+            return left.name() < right.name() ? -1 : 1;
+        }
+
         var pushBuildTypes = function(buildTypes) {
             _(buildTypes).forEach(function(bt) {
-                buildProjects.push(createProject(bt));
+                var buildBox = createProject(bt);
+                buildProjects.push(buildBox);
             });
+            
+            buildProjects.sort(compareProjects);
         }
 
         projectLoader.load(cfg, pushBuildTypes);
