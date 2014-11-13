@@ -1,14 +1,19 @@
 define([
     "jquery",
-    "lodash"
-], function ($, _) {
+    "lodash",
+    "project-filter"
+], function ($, _, filter) {
 
-    var load = function(baseUrl, callback) {
-        $.getJSON(baseUrl + "/guestAuth/app/rest/projects")
+    var load = function(cfg, callback) {
+        $.getJSON(cfg.baseUrl + "/guestAuth/app/rest/projects")
             .done(function(allData) {
 
-                var groupPromises = _.map(allData.project, function(group) {
-                    return $.getJSON(baseUrl + group.href);
+                var projects = filter.filterProjects(cfg, allData.project);
+
+                console.log(projects);
+
+                var groupPromises = _.map(projects, function(group) {
+                    return $.getJSON(cfg.baseUrl + group.href);
                 });
 
                 $.when.apply($, groupPromises).done(function() {

@@ -6,39 +6,41 @@ define([
     "build-updater"
 ], function (ko, $, _, projectLoader, buildUpdater) {
 
-    var baseUrl = "http://miniproxy.apphb.com/jetbrains-teamcity";
+    return function(cfg) {
 
-    var buildProjects = ko.observableArray([]);
+        var buildProjects = ko.observableArray([]);
 
-    var createProject = function(buildType) {
-        var model = {
-            name: ko.observable(buildType.name),
-            projectName: ko.observable(buildType.projectName),
-            failed: ko.observable(null)
+        var createProject = function(buildType) {
+            var model = {
+                name: ko.observable(buildType.name),
+                projectName: ko.observable(buildType.projectName),
+                failed: ko.observable(null)
+            }
+            model.buildStatus = ko.pureComputed(function() {
+                if (this.failed() === true) return "failed";
+                if (this.failed() === false) return "successful";
+                return null;
+            }, model);
+
+            $.getJSON(cfg.baseUrl + buildType.href)
+                .done(function(x) {
+                    buildUpdater(cfg.baseUrl + x.builds.href, model);
+                });
+
+            return model;
         }
-        model.buildStatus = ko.pureComputed(function() {
-            if (this.failed() === true) return "failed";
-            if (this.failed() === false) return "successful";
-            return null;
-        }, model);
 
-        $.getJSON(baseUrl + buildType.href)
-            .done(function(x) {
-                buildUpdater(baseUrl + x.builds.href, model);
+        var pushBuildTypes = function(buildTypes) {
+            _(buildTypes).forEach(function(bt) {
+                buildProjects.push(createProject(bt));
             });
+        }
 
-        return model;
+        projectLoader.load(cfg, pushBuildTypes);
+
+        return {
+            buildProjects: buildProjects
+        };
     }
 
-    var pushBuildTypes = function(buildTypes) {
-        _(buildTypes).forEach(function(bt) {
-            buildProjects.push(createProject(bt));
-        });
-    }
-
-    projectLoader.load(baseUrl, pushBuildTypes);
-
-    return {
-        buildProjects: buildProjects
-    };
 });

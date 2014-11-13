@@ -14,10 +14,10 @@ define([], function () {
 
     require([
         "knockout",
-        "screen"
-    ], function (ko, screen) {
+        "shell"
+    ], function (ko, shell) {
 
-        ko.applyBindings(screen);
+        ko.applyBindings(shell);
 
     });
 });
