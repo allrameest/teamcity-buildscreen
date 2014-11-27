@@ -6,14 +6,12 @@
 <body>
 
 <div data-bind="foreach: screens">
-	<div data-bind="foreach: buildProjects">
+	<div data-bind="foreach: buildProjects, visible: isActive">
 	  <div data-bind="css: buildStatus" class="build">
 	  	<p data-bind="text: projectName"></p>
 	  	<p data-bind="text: name"></p>
 	  </div>
 	</div>
-
-	<hr style="clear: both;">
 </div>
 
 <script data-main="app" src="lib/require.js"></script>

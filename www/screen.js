@@ -9,6 +9,8 @@ define([
     return function(cfg) {
 
         var buildProjects = ko.observableArray([]);
+        var isActive = ko.observable(false);
+        var nextScreen = null;
 
         var createProject = function(buildType) {
             var model = {
@@ -51,10 +53,24 @@ define([
             buildProjects.sort(compareProjects);
         }
 
+        var deactivate = function() {
+            isActive(false);
+            nextScreen.activate();
+        }
+
         projectLoader.load(cfg, pushBuildTypes);
 
         return {
-            buildProjects: buildProjects
+            buildProjects: buildProjects,
+            isActive: isActive,
+            setNext: function(next) {
+                nextScreen = next;
+            },
+            activate: function() {
+                isActive(true);
+
+                setTimeout(deactivate, 10000);
+            }
         };
     }
 
