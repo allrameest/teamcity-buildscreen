@@ -1,16 +1,33 @@
+var ko = require("knockout");
+
 define([
     "knockout",
     "jquery",
     "lodash",
     "project-loader",
-    "build-updater"
-], function (ko, $, _, projectLoader, buildUpdater) {
+    "build-updater",
+    "build-notifier"
+], function (ko, $, _, projectLoader, buildUpdater, buildNotifier) {
 
     return function(cfg) {
 
         var buildProjects = ko.observableArray([]);
         var isActive = ko.observable(false);
         var nextScreen = null;
+        var delayedNotify = false;
+
+        var notifier = buildNotifier(cfg);
+
+        var buildFailedNotify = function() {
+            if (isActive()) {
+                notifier.notify();
+                delayedNotify = false;
+            }
+            else
+            {
+                delayedNotify = true;
+            }
+        }
 
         var createProject = function(buildType) {
             var model = {
@@ -26,7 +43,7 @@ define([
 
             $.getJSON(cfg.baseUrl + buildType.href)
                 .done(function(x) {
-                    buildUpdater(cfg.baseUrl + x.builds.href, model);
+                    buildUpdater(cfg.baseUrl + x.builds.href, model, buildFailedNotify);
                 });
 
             return model;
@@ -68,6 +85,12 @@ define([
             },
             activate: function() {
                 isActive(true);
+
+                if (delayedNotify)
+                {
+                    notifier.notify();
+                    delayedNotify = false;
+                }
 
                 setTimeout(deactivate, 10000);
             }
