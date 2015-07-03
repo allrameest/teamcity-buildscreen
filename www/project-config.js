@@ -1,7 +1,7 @@
 define([], function () {
     return {
         screens: [
-            {
+            /*{
                 baseUrl: "http://localhost:49738",
                 showAll: true,
                 projects: [],
@@ -12,9 +12,7 @@ define([], function () {
                 showAll: true,
                 projects: [],
                 sound: "sounds/pacman.mp3"
-            }
-            /*,
-            
+            }*/
             {
                 baseUrl: "http://miniproxy.apphb.com/jetbrains-teamcity",
                 showAll: false,
@@ -24,7 +22,8 @@ define([], function () {
                     "Haskell",
                     "AmazonApiClient",
                     "NUnit"
-                ]
+                ],
+                sound: "sounds/dramatic-chipmunk.mp3"
             },
             {
                 baseUrl: "http://miniproxy.apphb.com/codebetter-teamcity",
@@ -33,8 +32,9 @@ define([], function () {
                     "Less",
                     "NHaml",
                     "NHibernate"
-                ]
-            }*/
+                ],
+                sound: "sounds/pacman.mp3"
+            }
         ]
     };
 });
